@@ -1,0 +1,26 @@
+---
+title: "Analisis descriptivo"
+author: "Fernando Varela"
+date: "30 de noviembre de 2015"
+output: html_document
+---
+```{r}
+  # Datos
+  cases.country <- aggregate(malaria$cases,list(country=malaria$country), mean)
+  cases.country
+  casos.year <- aggregate(malaria$cases,list(year=malaria$year),mean)
+```
+```{r}
+boxplot(malaria.water$cases ~ malaria.water$year)
+  boxplot(log10(malaria.water$cases) ~ malaria.water$year)
+  x.2000<-malaria.water$cases[malaria.water$year=="2000"]
+  x.2005<-malaria.water$cases[malaria.water$year=="2005"]
+  x.2010<-malaria.water$cases[malaria.water$year=="2010"]
+  
+  x.2012<-malaria.water$cases[malaria.water$year=="2012"]
+  boxplot(log10(x.2000),log10(x.2005),log10(x.2010),log10(x.2012))
+
+  plot(malaria.water$cases,malaria.water$total.drink)
+  abline(lm(malaria.water$total.drink ~malaria.water$cases))?gl
+  xyplot(total.drink~cases | year,data=malaria.water)
+```

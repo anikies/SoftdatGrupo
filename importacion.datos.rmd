@@ -1,0 +1,64 @@
+---
+title: "Software de datos"
+output:
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r}
+  #Archivo de datos "malaria.csv"
+  library(reshape2)
+  malaria.raw <- read.csv("malaria.csv", header = FALSE, skip = 2) #Datos en bruto
+  head(malaria.raw)
+  cnames<-read.csv("malaria.csv", header = FALSE, skip = 1, nrows=1)
+  
+  cnames <- sapply(cnames, function(x){x <- trimws(as.character(x))})
+  names(malaria.raw) <- cnames
+  
+  
+  malaria <- malaria.raw[complete.cases(malaria.raw),] 
+  
+  # Convierto las columnas de los años en filas
+  malaria <- melt(malaria.raw)
+  head(malaria)
+    # Solo filas sin valores NA
+  nrow(malaria[!complete.cases(malaria),])
+  malaria <- malaria[complete.cases(malaria),] 
+  
+  names(malaria) <- c("country","year","cases")
+
+  malaria$country <- as.character(malaria$country)
+  malaria$year <- as.character(malaria$year)
+
+  head(malaria)
+  
+  #Archivo de datos "water.csv"
+  water.raw <- read.csv("water.csv", header = FALSE,skip = 2)
+  head(water.raw)
+  cnames <- read.csv("water.csv", header = FALSE, skip = 1, nrows=1)
+  cnames <- sapply(cnames, function(x){x<-trimws(as.character(x))})
+  
+  names(water.raw) <- cnames
+  names(water.raw) <- tolower(names(water.raw))
+  
+  water.raw$country <- as.character(water.raw$country)
+  
+  names(water.raw)[3:5] <-paste(names(water.raw)[4:6],sep = "",".drink")
+  names(water.raw)[6:8] <- c("rural.facilities","urban.facilities","total.facilities")
+  
+  # Solo filas sin valores NA
+  na <- is.na(malaria)
+  nrow(water.raw[!complete.cases(water.raw),])
+  water <- water.raw[complete.cases(water.raw),] 
+  
+  head(water)
+  
+  #Se fusionan los datos por los campos comunes "country" y "year"
+  malaria.water <- merge(malaria,water,by=c("country","year"))
+  
+  head(malaria.water)
+  
+
+  
+  
