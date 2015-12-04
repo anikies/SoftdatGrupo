@@ -1,0 +1,51 @@
+---
+title: "Analisis descriptivo"
+author: "Fernando Varela"
+date: "30 de noviembre de 2015"
+output: html_document
+---
+```{r}
+  # Datos
+  cases.country <- aggregate(malaria$cases,list(country=malaria$country), mean)
+  cases.country
+  cases.year <- aggregate(malaria$cases,list(year=malaria$year),mean)
+  
+   #MEDIA por paises de casos y acceso al agua 
+  cdata <- aggregate(malaria.water[3:9], by = malaria.water["country"],FUN=mean)
+  
+  #SUMA por paises de casos y acceso al agua
+  cdata <- aggregate(malaria.water[3:9], by = malaria.water["country"],FUN=sum)
+  
+  #MEDIA por paises de casos y acceso al agua
+  cdata <- aggregate(malaria.water[3:9], by = malaria.water["year"],FUN=mean)
+  
+  #MEDIA por paises de casos y acceso al agua
+  cdata <- aggregate(malaria.water[3:9], by = malaria.water["year"],FUN=sum)
+```
+GRÁFICOS
+```{r}
+boxplot(malaria.water$cases ~ malaria.water$year)
+  boxplot(log10(malaria.water$cases) ~ malaria.water$year)
+  x.2000<-malaria.water$cases[malaria.water$year=="2000"]
+  x.2005<-malaria.water$cases[malaria.water$year=="2005"]
+  x.2010<-malaria.water$cases[malaria.water$year=="2010"]
+  
+  x.2012<-malaria.water$cases[malaria.water$year=="2012"]
+  boxplot(log10(x.2000),log10(x.2005),log10(x.2010),log10(x.2012))
+
+  plot(malaria.water$cases,malaria.water$total.drink)
+  abline(lm(malaria.water$total.drink ~malaria.water$cases))
+  xyplot(total.drink~cases | year,data=malaria.water)
+  
+  #Barplot de paises agrupados
+  barchart(cases~country,data=malaria.water,groups=year, 
+         scales=list(x=list(rot=90,cex=0.8)))
+ maf<-subset(malaria.water,country=="Afghanistan" | country == "Kenya" | country=="Mali",select=c(1:3)) 
+  barchart(maf$cases~maf$country,data=maf,groups=maf$year, 
++          scales=list(x=list(rot=90,cex=0.8)))
+  
+  qplot(cases,total.drink,data=malaria.water)
+  qplot(cases,total.drink,data=malaria.water,color=country)
+  qplot(cases,total.drink,data=malaria.water.region,color=region) + geom_point(size=3)
+  > qplot(cases,total.facilities,data=malaria.water.region,color=region) + geom_point(size=3)
+```

@@ -7,8 +7,15 @@ output:
 ---
 
 ```{r}
+
+  #Archivo de paises "countries.csv"
   #Archivo de datos "malaria.csv"
   library(reshape2)
+
+  countries.raw <- read.csv("countries.csv", header = TRUE) #Datos en bruto
+  region <- subset(countries.raw, select =c("SHORTNAMEFR","WHO_REGION"))  
+  names(region) <- c("country","region")
+  
   malaria.raw <- read.csv("malaria.csv", header = FALSE, skip = 2) #Datos en bruto
   head(malaria.raw)
   cnames<-read.csv("malaria.csv", header = FALSE, skip = 1, nrows=1)
@@ -30,7 +37,7 @@ output:
 
   malaria$country <- as.character(malaria$country)
   malaria$year <- as.character(malaria$year)
-
+  malaria<-malaria[order(malaria$country,malaria$year),]
   head(malaria)
   
   #Archivo de datos "water.csv"
@@ -52,10 +59,13 @@ output:
   nrow(water.raw[!complete.cases(water.raw),])
   water <- water.raw[complete.cases(water.raw),] 
   
+  #Orden por "country" y "year"
+  water<-water[order(water$country,water$year),]
   head(water)
   
   #Se fusionan los datos por los campos comunes "country" y "year"
   malaria.water <- merge(malaria,water,by=c("country","year"))
+  malaria.water.region <- merge(malaria.water,region,by=c("country"))
   
   head(malaria.water)
   

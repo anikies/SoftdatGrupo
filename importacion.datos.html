@@ -110,15 +110,15 @@ img {
 
   malaria$country &lt;- as.character(malaria$country)
   malaria$year &lt;- as.character(malaria$year)
-
+  malaria&lt;-malaria[order(malaria$country,malaria$year),]
   head(malaria)</code></pre>
-<pre><code>##       country year   cases
-## 1 Afghanistan 2013   39263
-## 2     Algeria 2013      16
-## 3      Angola 2013 1999868
-## 4   Argentina 2013       0
-## 6  Azerbaijan 2013       0
-## 8  Bangladesh 2013    3864</code></pre>
+<pre><code>##          country year  cases
+## 1392 Afghanistan 2000  94475
+## 1178 Afghanistan 2002 415356
+## 1071 Afghanistan 2003 360940
+## 964  Afghanistan 2004 242022
+## 857  Afghanistan 2005 116444
+## 750  Afghanistan 2006  86129</code></pre>
 <pre class="r"><code>  #Archivo de datos &quot;water.csv&quot;
   water.raw &lt;- read.csv(&quot;water.csv&quot;, header = FALSE,skip = 2)
   head(water.raw)</code></pre>
@@ -141,25 +141,27 @@ img {
   names(water.raw)[6:8] &lt;- c(&quot;rural.facilities&quot;,&quot;urban.facilities&quot;,&quot;total.facilities&quot;)
   
   # Solo filas sin valores NA
+  na &lt;- is.na(malaria)
   nrow(water.raw[!complete.cases(water.raw),])</code></pre>
 <pre><code>## [1] 95</code></pre>
 <pre class="r"><code>  water &lt;- water.raw[complete.cases(water.raw),] 
   
+  water&lt;-water[order(water$country,water$year),]
   head(water)</code></pre>
-<pre><code>##       country year urban.drink total.drink rural.drink rural.facilities
-## 1 Afghanistan 2012          56          90          64               23
-## 2 Afghanistan 2010          50          81          57               23
-## 3 Afghanistan 2005          34          59          40               22
-## 4 Afghanistan 2000          18          36          22               21
-## 5 Afghanistan 1995           3          14           5               20
-## 7     Albania 2012          94          97          96               86
-##   urban.facilities total.facilities
-## 1               47               29
-## 2               44               28
-## 3               38               26
-## 4               32               23
-## 5               26               21
-## 7               95               91</code></pre>
+<pre><code>##        country year urban.drink total.drink rural.drink rural.facilities
+## 5  Afghanistan 1995           3          14           5               20
+## 4  Afghanistan 2000          18          36          22               21
+## 3  Afghanistan 2005          34          59          40               22
+## 2  Afghanistan 2010          50          81          57               23
+## 1  Afghanistan 2012          56          90          64               23
+## 11     Albania 1995          94         100          96               72
+##    urban.facilities total.facilities
+## 5                26               21
+## 4                32               23
+## 3                38               26
+## 2                44               28
+## 1                47               29
+## 11               95               81</code></pre>
 <pre class="r"><code>  #Se fusionan los datos por los campos comunes &quot;country&quot; y &quot;year&quot;
   malaria.water &lt;- merge(malaria,water,by=c(&quot;country&quot;,&quot;year&quot;))
   
